@@ -1,33 +1,42 @@
-// src/index.ts
+// This file handles creating a single command.
 
-type CommandMetadata = {
+export type CommandMetadata = {
     name: string;
     description: string;
     icon: string;
 }
 
-type CommandBinding<ReturnType> = {
+export type CommandBinding<ReturnType> = {
     metadata: CommandMetadata;
     run: () => ReturnType;
 }
 
-type CommandBindpoint<Args extends any[], ReturnType> = {
+export type CommandBindpoint<Args extends any[], ReturnType> = {
     (...args: Args): ReturnType | undefined;
+    key: string; // globally unique key for the command namespace. combined with the command subkeys to get everything.
     argBindings: Record<string, CommandBinding<ReturnType>>;
 }
 
-export function defineCommand<Args extends any[], ReturnType extends any>(): CommandBindpoint<Args> {
+export function getCommandKey<Args extends any[]>(command: CommandBindpoint<Args>, ...args: Args): string {
+    return command.key + '.' + getArgKey(args);
+}
+export function getArgKey<Args extends any[]>(args: Args): string {
+    return args.map(arg => arg.toString()).join('.');
+}
+
+export function defineCommand<Args extends any[], ReturnType extends any>(key:string): CommandBindpoint<Args> {
 
     const command: CommandBindpoint<Args,ReturnType> = Object.assign(
         (...args: Args) => {
             console.log("Executing command")
             // Use the arguments to create a unique key
-            const key = args.map(arg => arg.toString()).join('.');
+            const key = getArgKey(args);
             // Find the command in the argBindings,
             // and run it if it exists.
             return command.argBindings[key]?.run() || undefined;
         },
         {
+            key: key,
             argBindings: {} as Record<string, CommandBinding<ReturnType>>
         }
     )

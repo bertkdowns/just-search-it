@@ -1,11 +1,12 @@
 // tests/greet.test.ts
 import { describe, it, expect } from 'vitest';
-import { defineCommand, addBinding } from '../src';
+import { defineCommand, addBinding } from '../src/commandBinding';
 
 
 describe('add command', () => {
   it('adds a command', () => {
-    const command = defineCommand();
+    const command = defineCommand("greet");
+    expect(command.key).toBe('greet');
     const fn = () => 'Hello, world!';
     const args = ['arg1', 'arg2'];
     const key = addBinding(command,{

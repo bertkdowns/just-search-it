@@ -3,23 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "private": true,
+  "workspaces": ["example","just-search-it"],
   "scripts": {
-    "build": "tsup",
-    "test": "vitest run",
-    "dev:test": "vitest watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/node": "^22.15.3",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.3",
-    "vitest": "^3.1.2"
   },
   "dependencies": {
-    "@types/react": "^19.1.2",
-    "react": "^19.1.0"
   }
 }

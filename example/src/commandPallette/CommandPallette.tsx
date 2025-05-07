@@ -11,19 +11,25 @@ export default function CommandPallette() {
 
     React.useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "/") {
+            event.preventDefault();
+            setOpen(true);
+            return;
+            }
+
             if (!open) return;
             console.log("handling keydown", event.key);
 
             if (event.key === "ArrowDown") {
-                setPosition((prev) => Math.min(prev + 1, Object.keys(commands).length - 1));
+            setPosition((prev) => Math.min(prev + 1, Object.keys(commands).length - 1));
             } else if (event.key === "ArrowUp") {
-                setPosition((prev) => Math.max(prev - 1, 0));
+            setPosition((prev) => Math.max(prev - 1, 0));
             } else if (event.key === "Enter") {
-                const command = Object.values(commands)[position];
-                console.log("Executing command:", command.metadata.name);
-                if (command) {
-                    command.run();
-                }
+            const command = Object.values(commands)[position];
+            console.log("Executing command:", command.metadata.name);
+            if (command) {
+                command.run();
+            }
             }
         };
 
@@ -32,6 +38,8 @@ export default function CommandPallette() {
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [open, commands, position]);
+
+
     return (
         <div>
         

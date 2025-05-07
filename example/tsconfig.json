@@ -1,4 +1,10 @@
 {
+  /*Fix intellisense so it imports properly*/
+  "compilerOptions": {
+    "paths": {
+      "just-search-it": ["../just-search-it/src"] // Adjust the path to point to the source folder
+    }
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

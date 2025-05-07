@@ -21,7 +21,11 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    /*Fix intellisense so it imports properly*/
+    "paths": {
+      "just-search-it": ["../just-search-it/src"] // Adjust the path to point to the source folder
+    }
   },
   "include": ["src"]
 }

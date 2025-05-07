@@ -3,6 +3,7 @@
 export type CommandMetadata = {
     name: string;
     description: string;
+    group?: string;
     icon: string;
 }
 

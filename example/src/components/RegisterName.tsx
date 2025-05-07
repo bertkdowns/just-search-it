@@ -6,6 +6,7 @@ function RegisterName({name}: { name: string }) {
         name: name,
         description: "Say hello",
         icon: "👋",
+        group: "greeting",
     }, () => {
         console.log("Hello, " + name + "!");
         return "Hello, " + name + "!";

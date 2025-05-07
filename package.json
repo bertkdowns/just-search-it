@@ -1,7 +1,7 @@
 {
-  "name": "just-search-it",
+  "name": "just-search-it-monorepo",
   "version": "1.0.0",
-  "main": "index.js",
+
   "type": "module",
   "private": true,
   "workspaces": ["example","just-search-it"],

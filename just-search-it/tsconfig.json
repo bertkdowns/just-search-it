@@ -10,7 +10,7 @@
       "skipLibCheck": true,
       "outDir": "dist",
       "sourceMap": true,
-      "jsx": "react"
+      "jsx": "react",
     },
     "include": ["just-search-it/src"]
   }

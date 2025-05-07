@@ -1,10 +1,9 @@
 {
     "name": "just-search-it",
     "version": "1.0.0",
-    "main": "index.js",
     "type": "module",
-    "private": true,
-    "workspaces": ["example"],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
       "build": "tsup",
       "test": "vitest run",

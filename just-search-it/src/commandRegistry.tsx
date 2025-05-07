@@ -2,7 +2,8 @@
 // context. 
 // This code is react-specific, but maybe it could be made generic?
 import { useContext, useEffect, createContext, useState, useRef } from "react";
-import { CommandBinding, CommandBindpoint, addBinding,removeBinding, CommandMetadata, getArgKey, getCommandKey } from "./commandBinding";
+import type { CommandBinding, CommandBindpoint, CommandMetadata } from "./commandBinding";
+import {  addBinding,removeBinding, getArgKey, getCommandKey } from "./commandBinding";
 import React from "react";
 
 type CommandRegistry = Record<string, CommandBinding<any>>;
@@ -10,7 +11,7 @@ type CommandRegistry = Record<string, CommandBinding<any>>;
 const CommandContext = createContext<CommandRegistry>({});
 const SetCommandContext = createContext<React.Ref<React.Dispatch<React.SetStateAction<CommandRegistry>>>>(null!);
 
-function CommandProvider({children}){
+export function CommandProvider({children}){
     const [commandContext, setCommandContext] = useState<CommandRegistry>({});
     const setCommandRef = useRef<React.Dispatch<React.SetStateAction<CommandRegistry>>>(setCommandContext);
 
@@ -25,17 +26,17 @@ function CommandProvider({children}){
     )
 }
 
-function useCommands() {
+export function useCommands() {
     const commandContext = useContext(CommandContext);
     return commandContext;
 }
 
-function useSetCommands() {
+export function useSetCommands() {
     const setCommandContext = useContext(SetCommandContext);
     return setCommandContext;
 }
 
-function useRegisterCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, metadata: CommandMetadata, fn: () => ReturnType, ...args: Args){
+export function useRegisterCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, metadata: CommandMetadata, fn: () => ReturnType, ...args: Args){
     const setCommandContext = useSetCommands();
     
     
@@ -65,7 +66,7 @@ function useRegisterCommand<Args extends any[], ReturnType>(command: CommandBind
     command.argBindings[key].run = fn;
 }
 
-function useCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>,...args: Args): ()=> (ReturnType | undefined) {
+export function useCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>,...args: Args): ()=> (ReturnType | undefined) {
     const key = getArgKey(args);
     return ()=> command.argBindings[key]?.run() 
 }

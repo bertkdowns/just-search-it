@@ -2,12 +2,13 @@
  
 import * as React from "react"
 import { Dialog, DialogContent, DialogTrigger,DialogTitle } from "./Dialog";
-import { useCommands } from 'just-search-it';
+import { useCommands, type CommandBinding } from 'just-search-it';
 
 export default function CommandPallette() {
     const commands = useCommands();
     const [open, setOpen] = React.useState(false);
     const [position, setPosition] = React.useState(0);
+    const [searchTerm, setSearchTerm] = React.useState("");
 
     React.useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -25,6 +26,7 @@ export default function CommandPallette() {
             } else if (event.key === "ArrowUp") {
             setPosition((prev) => Math.max(prev - 1, 0));
             } else if (event.key === "Enter") {
+                setOpen(false);
             const command = Object.values(commands)[position];
             console.log("Executing command:", command.metadata.name);
             if (command) {
@@ -39,6 +41,12 @@ export default function CommandPallette() {
         };
     }, [open, commands, position]);
 
+    function runCommand(command: CommandBinding<any>) {
+        return () => {
+            setOpen(false);
+            command.run();
+        }
+    }
 
     return (
         <div>
@@ -48,10 +56,11 @@ export default function CommandPallette() {
                 {open ? "close" : "open"}
             </DialogTrigger>
             <DialogContent >
+                <input value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}}></input>
                 <div>
                     <DialogTitle>Search</DialogTitle>
                     {Object.entries(commands).map(([key, command], index) => (
-                        <div key={key} onClick={() => { command.run(); }} className={index === position ? 'bg-secondary' : ''}>
+                        <div key={key} onClick={runCommand(command)} className={index === position ? 'bg-secondary' : ''}>
                             {command.metadata.name}
                         </div>
                     ))}

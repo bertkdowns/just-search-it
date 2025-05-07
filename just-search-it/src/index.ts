@@ -1,5 +1,7 @@
 import type { CommandBinding, CommandBindpoint, CommandMetadata, } from "./commandBinding";
-import { CommandProvider, useCommands, useCommand } from "./commandRegistry";
+import { CommandProvider, useCommands, useCommand, useRegisterCommand } from "./commandRegistry";
+import { defineCommand } from "./commandBinding";
+import CommandPallette from "./CommandPallette";
 
 export {
     CommandBinding,
@@ -7,5 +9,8 @@ export {
     CommandMetadata,
     CommandProvider,
     useCommands,
-    useCommand
+    useCommand,
+    defineCommand,
+    useRegisterCommand,
+    CommandPallette,
 };

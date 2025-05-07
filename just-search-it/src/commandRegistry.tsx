@@ -38,14 +38,17 @@ export function useSetCommands() {
 
 export function useRegisterCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, metadata: CommandMetadata, fn: () => ReturnType, ...args: Args){
     const setCommandContext = useSetCommands();
-    
+    const key = addBinding(command, metadata, fn, ...args);
     
     useEffect(()=>{
-        const key = addBinding(command, metadata, fn, ...args);
+        if (!setCommandContext) {
+            console.error("Command context is not available. Make sure that you have wrapped this component in a CommandProvider.");
+            return;
+        }
         // Register the command in the context
         setCommandContext.current((prev: CommandRegistry) => ({
             ...prev,
-            [key]: {
+            [command.key + '.' + key]: {
                 metadata: metadata,
                 run: fn
             }
@@ -55,15 +58,11 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
             removeBinding(command, key);
             setCommandContext.current((prev: CommandRegistry) => {
                 const newContext = { ...prev };
-                delete newContext[key];
+                delete newContext[command.key + '.' + key];
                 return newContext;
             });
         }
-    }, [command])
-
-    const key = args.map(arg => arg.toString()).join('.');
-    // Always update the command function
-    command.argBindings[key].run = fn;
+    }, [command,setCommandContext])
 }
 
 export function useCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>,...args: Args): ()=> (ReturnType | undefined) {

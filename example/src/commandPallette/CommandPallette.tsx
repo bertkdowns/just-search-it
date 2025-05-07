@@ -7,6 +7,31 @@ import { useCommands } from 'just-search-it';
 export default function CommandPallette() {
     const commands = useCommands();
     const [open, setOpen] = React.useState(false);
+    const [position, setPosition] = React.useState(0);
+
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (!open) return;
+            console.log("handling keydown", event.key);
+
+            if (event.key === "ArrowDown") {
+                setPosition((prev) => Math.min(prev + 1, Object.keys(commands).length - 1));
+            } else if (event.key === "ArrowUp") {
+                setPosition((prev) => Math.max(prev - 1, 0));
+            } else if (event.key === "Enter") {
+                const command = Object.values(commands)[position];
+                console.log("Executing command:", command.metadata.name);
+                if (command) {
+                    command.run();
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [open, commands, position]);
     return (
         <div>
         
@@ -15,16 +40,13 @@ export default function CommandPallette() {
                 {open ? "close" : "open"}
             </DialogTrigger>
             <DialogContent >
-                <div className="bg-blue-300">
+                <div>
                     <DialogTitle>Search</DialogTitle>
-                    hello there.
-                    {Object.entries(commands).map(([key, command]) => (
-                        <div key={key} onClick={() => { command.run(); }}>{command.metadata.name}</div>
+                    {Object.entries(commands).map(([key, command], index) => (
+                        <div key={key} onClick={() => { command.run(); }} className={index === position ? 'bg-secondary' : ''}>
+                            {command.metadata.name}
+                        </div>
                     ))}
-                    
-                    <div className="additional-content">
-                        Additional content goes here. you can add as much or as little as you like.
-                    </div>
                 </div>
             </DialogContent>
         </Dialog>

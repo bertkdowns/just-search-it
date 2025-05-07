@@ -113,20 +113,29 @@ export default function CommandPallette() {
                     <input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value) }}></input>
                     <div>
                         <DialogTitle>Search</DialogTitle>
-                        {
-                            Object.entries(groupedMap).map(([group, items], index) => (
-                                <div key={group}>
-                                    <h2 className="text-xl">{group}</h2>
-                                    <div>
-                                        {items.map(({ item }, index) => (
-                                            <div key={item.key} onClick={runCommand(item.command)} className={index === row ? 'bg-secondary' : ''}>
-                                                {item.command.metadata.name}
-                                            </div>
-                                        ))}
+                        <div className="grid grid-cols-3 gap-4">
+                            {
+                                Object.entries(groupedMap).map(([group, items], index) => {
+                                    const itemLevel = Math.floor(index / numColumns);
+                                    const itemColumn = index % numColumns;
+                                    return (
+                                    <div key={group} className="p-4 rounded border bg-gray-100">
+                                        <h2 className="text-xl mb-2">{group}</h2>
+                                        <div>
+                                            {items.map(({ item }, itemIndex) => (
+                                                <div 
+                                                    key={item.key} 
+                                                    onClick={runCommand(item.command)} 
+                                                    className={`p-2 rounded cursor-pointer ${itemIndex === row && itemColumn === column && itemLevel == level ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
+                                                >
+                                                    {item.command.metadata.name}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            ))
-                        }
+                                )})
+                            }
+                        </div>
                     </div>
                 </DialogContent>
             </Dialog>

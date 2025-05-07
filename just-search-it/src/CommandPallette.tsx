@@ -8,10 +8,12 @@ export default function CommandPallette() {
     const commands = useCommands();
     const [open, setOpen] = React.useState(false);
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
+        <div>
+        <DialogTrigger>
                 {open ? "close" : "open"}
             </DialogTrigger>
+        <Dialog open={true} onOpenChange={setOpen}>
+            
             <DialogContent >
                 <div className="bg-blue-300">
                     <DialogTitle>Search</DialogTitle>
@@ -26,5 +28,6 @@ export default function CommandPallette() {
                 </div>
             </DialogContent>
         </Dialog>
+        </div>
     );
 }

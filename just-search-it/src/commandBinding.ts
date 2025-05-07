@@ -17,14 +17,14 @@ export type CommandBindpoint<Args extends any[], ReturnType> = {
     argBindings: Record<string, CommandBinding<ReturnType>>;
 }
 
-export function getCommandKey<Args extends any[]>(command: CommandBindpoint<Args>, ...args: Args): string {
+export function getCommandKey<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, ...args: Args): string {
     return command.key + '.' + getArgKey(args);
 }
 export function getArgKey<Args extends any[]>(args: Args): string {
     return args.map(arg => arg.toString()).join('.');
 }
 
-export function defineCommand<Args extends any[], ReturnType extends any>(key:string): CommandBindpoint<Args> {
+export function defineCommand<Args extends any[], ReturnType extends any>(key:string): CommandBindpoint<Args,ReturnType> {
 
     const command: CommandBindpoint<Args,ReturnType> = Object.assign(
         (...args: Args) => {

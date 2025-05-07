@@ -14,6 +14,7 @@
     "@radix-ui/react-dialog": "^1.1.13",
     "@tailwindcss/vite": "^4.1.5",
     "clsx": "^2.1.1",
+    "fuse.js": "^7.1.0",
     "just-search-it": "*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

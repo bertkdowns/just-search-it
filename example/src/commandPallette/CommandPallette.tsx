@@ -3,12 +3,41 @@
 import * as React from "react"
 import { Dialog, DialogContent, DialogTrigger,DialogTitle } from "./Dialog";
 import { useCommands, type CommandBinding } from 'just-search-it';
+import Fuse from "fuse.js";
+
+
+const fuseOptions = {
+	// isCaseSensitive: false,
+	// includeScore: false,
+	// ignoreDiacritics: false,
+	// shouldSort: true,
+	// includeMatches: false,
+	// findAllMatches: false,
+	// minMatchCharLength: 1,
+	// location: 0,
+	// threshold: 0.6,
+	// distance: 100,
+	// useExtendedSearch: false,
+	// ignoreLocation: false,
+	// ignoreFieldNorm: false,
+	// fieldNormWeight: 1,
+	keys: [
+		"command.metadata.name",
+		"command.metadata.description"
+	]
+};
+
+
 
 export default function CommandPallette() {
     const commands = useCommands();
     const [open, setOpen] = React.useState(false);
     const [position, setPosition] = React.useState(0);
     const [searchTerm, setSearchTerm] = React.useState("");
+
+    const commandList = Object.entries(commands)
+        .map(([key, command]) => ({key: key, command: command}))
+    const filteredList = new Fuse(commandList, fuseOptions).search(searchTerm);
 
     React.useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -48,6 +77,7 @@ export default function CommandPallette() {
         }
     }
 
+
     return (
         <div>
         
@@ -59,9 +89,9 @@ export default function CommandPallette() {
                 <input value={searchTerm} onChange={(e) => {setSearchTerm(e.target.value)}}></input>
                 <div>
                     <DialogTitle>Search</DialogTitle>
-                    {Object.entries(commands).map(([key, command], index) => (
-                        <div key={key} onClick={runCommand(command)} className={index === position ? 'bg-secondary' : ''}>
-                            {command.metadata.name}
+                    {filteredList.map(({item}, index) => (
+                        <div key={item.key} onClick={runCommand(item.command)} className={index === position ? 'bg-secondary' : ''}>
+                            {item.command.metadata.name}
                         </div>
                     ))}
                 </div>

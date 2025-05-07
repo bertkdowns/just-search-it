@@ -2,17 +2,17 @@
  
 import * as React from "react"
 import { Dialog, DialogContent, DialogTrigger,DialogTitle } from "./Dialog";
-import { useCommands } from './commandRegistry';
+import { useCommands } from 'just-search-it';
 
 export default function CommandPallette() {
     const commands = useCommands();
     const [open, setOpen] = React.useState(false);
     return (
         <div>
-        <DialogTrigger>
+        <DialogTrigger onClick={() => setOpen(!open)}>
                 {open ? "close" : "open"}
             </DialogTrigger>
-        <Dialog open={true} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={setOpen}>
             
             <DialogContent >
                 <div className="bg-blue-300">

@@ -9,11 +9,11 @@ export default function CommandPallette() {
     const [open, setOpen] = React.useState(false);
     return (
         <div>
+        
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger onClick={() => setOpen(!open)}>
                 {open ? "close" : "open"}
             </DialogTrigger>
-        <Dialog open={open} onOpenChange={setOpen}>
-            
             <DialogContent >
                 <div className="bg-blue-300">
                     <DialogTitle>Search</DialogTitle>

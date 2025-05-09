@@ -82,7 +82,14 @@ export default function CommandPallette() {
         setColumn((prev) => Math.min(prev + 1, numColumns - 1));
       } else if (event.key === "Enter") {
         setOpen(false);
-        // a seperate event handler is used to actually run the command.
+        let rowIndex = 0;
+        groupedMap.filter((_, i) => i % numColumns === column).forEach(([, items]) => {
+          items.forEach((item) => {
+            if (rowIndex++ === row) {
+              item.item.command.run();
+            }
+          });
+        })
       }
     };
 

@@ -171,7 +171,7 @@ function Column({
       {items.map(([group, items], index) => (
         <div
           key={group}
-          className="p-2 border-2 border-gray-300 rounded-md mt-2"
+          className="p-2 border-1 border-gray-300 rounded-sm mt-2 shadow-sm"
         >
           <h2 className="text-xl text-center bold">{group}</h2>
           {items.map((item) => (
@@ -197,8 +197,8 @@ function Command({selected, commandBinding, runCommand}: {
   const handleExecute = runCommand(commandBinding);
   return (
     <div
-      className={`flex flex-row items-center p-2 border-2 rounded-md ${
-        selected ? "bg-blue-200" : "bg-white"
+      className={`flex flex-row items-center p-2  rounded-sm ${
+        selected ? "bg-blue-200 shadow" : "bg-white"
       }`}
     >
       <span className="text-xl">{commandBinding.metadata.icon}</span>

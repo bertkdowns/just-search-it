@@ -12,11 +12,15 @@ export type CommandBinding<ReturnType> = {
     run: () => ReturnType;
 }
 
+export type Command = CommandBinding<any>
+
 export type CommandBindpoint<Args extends any[], ReturnType> = {
     (...args: Args): ReturnType | undefined;
     key: string; // globally unique key for the command namespace. combined with the command subkeys to get everything.
     argBindings: Record<string, CommandBinding<ReturnType>>;
 }
+
+export type CommandType<Args extends any[], ReturnType> = CommandBindpoint<Args, ReturnType> 
 
 export function getCommandKey<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, ...args: Args): string {
     return command.key + '.' + getArgKey(args);

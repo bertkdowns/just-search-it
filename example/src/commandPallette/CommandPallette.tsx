@@ -28,17 +28,27 @@ const fuseOptions = {
 };
 
 
-type GroupedResult = Record<string, FuseResult<{
+// grid grid-cols-10
+const ColumnOrder = [
+    "col-start-4 col-span-4",
+    "col-start-1 col-span-3",
+    "col-start-8 col-span-3",
+]
+
+
+type SearchResult = FuseResult<{
     key: string;
     command: CommandBinding<any>;
-}>[]>
+}>
+type GroupedMap = Record<string, SearchResult[]>;
+
+type GroupedResult = [string, SearchResult[]][];
 
 export default function CommandPallette() {
     const commands = useCommands();
     const [open, setOpen] = React.useState(false);
     const [row, setRow] = React.useState(0); // how far down the list we are
     const [column, setColumn] = React.useState(1); // which column we are in. there are 3 columns, for 3 different command groups
-    const [level, setLevel] = React.useState(0); // if we are looking at the 0th, 1st or second... group of commands in a column
     const numColumns = 3;
     const [searchTerm, setSearchTerm] = React.useState("");
 
@@ -46,14 +56,14 @@ export default function CommandPallette() {
         .map(([key, command]) => ({ key: key, command: command }))
     const filteredList = new Fuse(commandList, fuseOptions).search(searchTerm);
     // group the commands by their item.command.metadata.group
-    const groupedMap = filteredList.reduce((acc: GroupedResult,  item ) => {
+    const groupedMap: GroupedResult = Object.entries(filteredList.reduce((acc: GroupedMap, item) => {
         const group = item.item.command.metadata.group || "default";
         if (!acc[group]) {
             acc[group] = [];
         }
         acc[group].push(item);
         return acc;
-    }, {} as GroupedResult);
+    }, {} as GroupedMap));
 
 
 
@@ -92,12 +102,12 @@ export default function CommandPallette() {
         };
     }, [open, commands, row]);
 
-    function runCommand(command: CommandBinding<any>) {
+    const runCommand = React.useCallback((command: CommandBinding<any>) => {
         return () => {
             setOpen(false);
             command.run();
         }
-    }
+    }, [setOpen])
 
 
 
@@ -113,28 +123,18 @@ export default function CommandPallette() {
                     <input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value) }}></input>
                     <div>
                         <DialogTitle>Search</DialogTitle>
-                        <div className="grid grid-cols-3 gap-4">
-                            {
-                                Object.entries(groupedMap).map(([group, items], index) => {
-                                    const itemLevel = Math.floor(index / numColumns);
-                                    const itemColumn = index % numColumns;
-                                    return (
-                                    <div key={group} className="p-4 rounded border bg-gray-100">
-                                        <h2 className="text-xl mb-2">{group}</h2>
-                                        <div>
-                                            {items.map(({ item }, itemIndex) => (
-                                                <div 
-                                                    key={item.key} 
-                                                    onClick={runCommand(item.command)} 
-                                                    className={`p-2 rounded cursor-pointer ${itemIndex === row && itemColumn === column && itemLevel == level ? 'bg-gray-300' : 'hover:bg-gray-200'}`}
-                                                >
-                                                    {item.command.metadata.name}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )})
-                            }
+                        <div className="grid grid-cols-10 gap-4">
+                            {groupedMap.map(([group, items], index) => (
+                                <div key={group} className={ColumnOrder[index % numColumns] + " row-start-"+ (1 + Math.floor(index / numColumns))}>
+                                    <h2>{group}</h2>
+                                    {items.map((item) => (
+                                        <button key={item.item.key} onClick={runCommand(item.item.command)}>
+                                            {item.item.command.metadata.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            ))}
+
                         </div>
                     </div>
                 </DialogContent>
@@ -142,3 +142,4 @@ export default function CommandPallette() {
         </div>
     );
 }
+

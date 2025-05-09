@@ -124,6 +124,9 @@ export default function CommandPallette() {
           ></input>
           <div>
             <DialogTitle>Search</DialogTitle>
+            {
+              searchTerm.length == 0 && <CommandBrowser/>
+            }
             <div className="flex flex-row">
               {ColumnWidths.map((colClass, index) => (
                 <div
@@ -210,4 +213,10 @@ function Command({selected, commandBinding, runCommand}: {
       </button>
     </div>
   );
+}
+
+
+function CommandBrowser() {
+
+  return null;
 }

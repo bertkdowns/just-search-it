@@ -1,7 +1,8 @@
 import type { CommandBinding, CommandBindpoint, CommandMetadata, } from "./commandBinding";
 import { CommandProvider, useCommands, useCommand, useRegisterCommand } from "./commandRegistry";
 import { defineCommand } from "./commandBinding";
-import CommandPallette from "../../example/src/commandPallette/CommandPallette";
+import { groupCommands, extractCommand, extractGroup, extractType } from "./commandFiltering";
+
 
 export {
     CommandBinding,
@@ -12,5 +13,8 @@ export {
     useCommand,
     defineCommand,
     useRegisterCommand,
-    CommandPallette,
+    groupCommands,
+    extractCommand,
+    extractGroup,
+    extractType,
 };

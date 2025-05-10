@@ -1,10 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogClose } from "../components/ui/dialog";
-import { useCommands, type CommandBinding } from "just-search-it";
 import Fuse, { type FuseResult } from "fuse.js";
+import { useCommands, type CommandBinding } from "just-search-it";
+import * as React from "react";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { CommandBrowser } from "./CommandBrowser";
+import { CommandButton } from "./commandDisplays";
 
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -46,6 +47,7 @@ export default function CommandPallette() {
   const [column, setColumn] = React.useState(1); // which column we are in. there are 3 columns, for 3 different command groups
   const numColumns = 3;
   const [searchTerm, setSearchTerm] = React.useState("");
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const commandList = Object.entries(commands).map(([key, command]) => ({
     key: key,
@@ -91,6 +93,11 @@ export default function CommandPallette() {
             }
           });
         })
+      } else {
+        // Refocus the input field so that the user can type again.
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
       }
     };
 
@@ -108,6 +115,7 @@ export default function CommandPallette() {
         </DialogTrigger>
         <DialogContent className="w-[80vw]">
           <input
+            ref={inputRef}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -166,7 +174,7 @@ function Column({
         >
           <h2 className="text-xl text-center bold">{group}</h2>
           {items.map((item) => (
-            <Command
+            <CommandButton
               key={item.item.key}
               selected={selectedRowIndex === rowIndex++ && columnIndex === selectedColumnIndex}
               commandBinding={item.item.command}
@@ -179,23 +187,6 @@ function Column({
 }
 
 
-function Command({selected, commandBinding}: {
-  selected: boolean;
-  commandBinding: CommandBinding<any>;
-}) {
-  return (
-    <DialogClose asChild>
-    <button
-        onClick={()=>{commandBinding.run()}}
-      className={`flex flex-row items-center p-2  rounded-sm ${
-        selected ? "bg-blue-200 shadow" : "bg-white"
-      }`}
-    >
-      <span className="text-xl">{commandBinding.metadata.icon}</span>
-        {commandBinding.metadata.name}
-    </button>
-    </DialogClose>
-  );
-}
+
 
 

@@ -1,9 +1,10 @@
 
 import './App.css'
-import { CommandPallette, CommandProvider } from 'just-search-it'
+import { CommandProvider } from 'just-search-it'
 import RegisterHello from './components/RegisterHello'
 import RegisterName from './components/RegisterName'
 import RegisterGroup from './components/RegisterGroup'
+import CommandPallette from './commandPallette/CommandPallette'
 
 function App() {
 

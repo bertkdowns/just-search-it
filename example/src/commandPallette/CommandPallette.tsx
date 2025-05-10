@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "./Dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../components/ui/dialog";
 import { useCommands, type CommandBinding } from "just-search-it";
 import Fuse, { type FuseResult } from "fuse.js";
 

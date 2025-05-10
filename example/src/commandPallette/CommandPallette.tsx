@@ -4,6 +4,7 @@ import * as React from "react";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../components/ui/dialog";
 import { useCommands, type CommandBinding } from "just-search-it";
 import Fuse, { type FuseResult } from "fuse.js";
+import { CommandBrowser } from "./CommandBrowser";
 
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -216,7 +217,3 @@ function Command({selected, commandBinding, runCommand}: {
 }
 
 
-function CommandBrowser() {
-
-  return null;
-}

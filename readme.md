@@ -37,19 +37,41 @@ const result = launch("Firefox");
 
 To do:
 
-- Create the command registry.
-- You're gonna need a global context with all the commands.
-- Then binding a command should also register it in the global context.
-- if nothing is bound to a command, it should be gone.
+### Shortcuts
 
-Note that there's a key way that the commands work:
-- Metadata should not change once a command is bound. However, the function that is bound to a command can change, so that it doesn't get stale.
-The reason metadat shouldn't change is because it is used to render the command in a UI. The ui only updates when the list of bound commands changes.
+Handle keyboard shortcuts like our platform does. Add keycommands to the commandMetadata, and update the ui to show them. Make it easy to make a UI for that too.
 
-Implementation in react:
-Gonna need a useEffect to register commands and degregister them when a component mounts/unmounts.
-Gonna need some way of saying when rerender needs to happen - possibly store a list of all bound commands seperately? 
+### Input
 
-A useBind hook could maybe wrap all of this, or we could create a component.
+Handle input. This isn't actually dependent on the command library, but it would be nice to at least have an example.
 
-then we just need to make a ui for searching...
+
+```
+await InputRequest("Choose a country",options: [
+  "USA"
+  "China"
+  "UK"
+],type: string | enum | number | url // if type is string or number the options are just suggestions.
+)
+```
+
+We can handle all the filtering of options, and validating of types. maybe using a library like yup or that MCP one. 
+
+Because it's await, you can chain these easily. if the user presses escape that can throw an error, and you can try-catch that.
+
+
+### MCP/LLM
+
+Finally, add MCP support, or DIY it. a LLM can choose from the list of commands, and then InputRequest can be used to prompt the LLM for inputs one at a time.
+
+I'm guessing we're gonna be running a MCP server client side, or something like that, because we have to dynamically change which actions are avaliable. We're gonna have to figure out how that works.
+
+Actually, MCP servers might be too much. we just need to understand how tooling works. (though maybe being able to work with MCP servers so the LLM can access both the commands and other MCP commands might be even better - e.g so an LLM can outsource some computation, and then run a command on the result.)
+
+When you type something in the search bar, if there's no results, it's considered a LLM prompt when you hit enter.
+
+### NPM
+
+Gotta publish this to NPM, and also add it to the platform.
+
+

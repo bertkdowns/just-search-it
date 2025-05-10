@@ -16,6 +16,7 @@ export function groupCommands(commands: Command[]) {
 
 // Extracts a command from the command list by its key
 // and returns the command and the rest of the command list.
+// Dont know if this works.
 export function extractCommand(
   command: Command[],
   key: string

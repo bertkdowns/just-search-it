@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogClose } from "../components/ui/dialog";
 import { useCommands, type CommandBinding } from "just-search-it";
 import Fuse, { type FuseResult } from "fuse.js";
 import { CommandBrowser } from "./CommandBrowser";
@@ -100,16 +100,6 @@ export default function CommandPallette() {
     };
   }, [open, commands, row]);
 
-  const runCommand = React.useCallback(
-    (command: CommandBinding<any>) => {
-      return () => {
-        setOpen(false);
-        command.run();
-      };
-    },
-    [setOpen]
-  );
-
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -138,7 +128,6 @@ export default function CommandPallette() {
                     groupedMap={groupedMap}
                     columnIndex={index}
                     numColumns={numColumns}
-                    runCommand={runCommand}
                     selectedColumnIndex={column}
                     selectedRowIndex={row}
                   />
@@ -156,14 +145,12 @@ function Column({
   groupedMap,
   columnIndex,
   numColumns,
-  runCommand,
   selectedColumnIndex,
   selectedRowIndex,
 }: {
   groupedMap: GroupedResult;
   columnIndex: number;
   numColumns: number;
-  runCommand: (command: CommandBinding<any>) => () => void;
   selectedColumnIndex: number;
   selectedRowIndex: number;
 }) {
@@ -183,7 +170,6 @@ function Column({
               key={item.item.key}
               selected={selectedRowIndex === rowIndex++ && columnIndex === selectedColumnIndex}
               commandBinding={item.item.command}
-              runCommand={runCommand}
             />
           ))}
         </div>
@@ -193,26 +179,22 @@ function Column({
 }
 
 
-function Command({selected, commandBinding, runCommand}: {
+function Command({selected, commandBinding}: {
   selected: boolean;
   commandBinding: CommandBinding<any>;
-  runCommand: (command: CommandBinding<any>) => () => void;
 }) {
-  const handleExecute = runCommand(commandBinding);
   return (
-    <div
+    <DialogClose asChild>
+    <button
+        onClick={()=>{commandBinding.run()}}
       className={`flex flex-row items-center p-2  rounded-sm ${
         selected ? "bg-blue-200 shadow" : "bg-white"
       }`}
     >
       <span className="text-xl">{commandBinding.metadata.icon}</span>
-      <button
-        onClick={handleExecute}
-        className="block w-full text-left"
-      >
         {commandBinding.metadata.name}
-      </button>
-    </div>
+    </button>
+    </DialogClose>
   );
 }
 

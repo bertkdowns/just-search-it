@@ -2,7 +2,7 @@ import type { CommandBinding, CommandBindpoint, CommandMetadata, } from "./comma
 import { CommandProvider, useCommands, useCommand, useRegisterCommand } from "./commandRegistry";
 import { defineCommand } from "./commandBinding";
 import { groupCommands, extractCommand, extractGroup, extractType } from "./commandFiltering";
-
+import { useCommandSearch } from "./commandSearch";
 
 export {
     CommandBinding,
@@ -17,4 +17,5 @@ export {
     extractCommand,
     extractGroup,
     extractType,
+    useCommandSearch,
 };

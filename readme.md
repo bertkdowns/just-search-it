@@ -21,6 +21,7 @@ addBinding(
     name: "Launch Firefox",
     description: "Launches the Web Browser",
     icon: "🌍",
+    shortcuts: [{key: "f",ctrlKey:true}]
   },
   () => {
     // Do something
@@ -36,10 +37,6 @@ const result = launch("Firefox");
 
 
 To do:
-
-### Shortcuts
-
-Handle keyboard shortcuts like our platform does. Add keycommands to the commandMetadata, and update the ui to show them. Make it easy to make a UI for that too.
 
 ### Input
 

@@ -6,6 +6,10 @@ function RegisterHello() {
         name: "hello",
         description: "Say hello",
         icon: "👋",
+        shortcuts: [{
+            key: "e",
+            ctrlKey: true,
+        }]
     }, () => {
         console.log("Hello, World!");
         return "Hello, World!";

@@ -1,5 +1,5 @@
 import Fuse, { type FuseResult } from "fuse.js";
-import { useCommands } from "./commandRegistry";
+import { useCommands, runCommandShortcut } from "./commandRegistry";
 import { CommandBinding } from "./commandBinding";
 import * as React from "react";
 
@@ -69,6 +69,8 @@ export function useCommandSearch(
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat) return;  // ignore repeated keydown events (from long-press)
+      runCommandShortcut(commands, event);
       if (!open) return;
       if (event.key === "ArrowDown") {
         setRow((prev) => Math.min(prev + 1, Object.keys(commands).length - 1));

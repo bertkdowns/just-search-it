@@ -60,11 +60,13 @@ export default function CommandPallette() {
   // TODO; useKeypress hook
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "/") {
-        event.preventDefault();
-        setOpen(true);
-        return;
-      }
+      if (event.target?.nodeName != "INPUT" && event.target?.nodeName != "TEXTAREA") {
+        if (event.key === "/") {
+          event.preventDefault();
+          setOpen(true);
+          return;
+        }
+    }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {

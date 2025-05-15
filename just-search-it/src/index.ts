@@ -3,6 +3,7 @@ import { CommandProvider, useCommands, useCommand, useRegisterCommand } from "./
 import { defineCommand } from "./commandBinding";
 import { groupCommands, extractCommand, extractGroup, extractType } from "./commandFiltering";
 import { useCommandSearch } from "./commandSearch";
+import type { Shortcut } from "./shortcuts";
 
 export {
     CommandBinding,
@@ -18,4 +19,5 @@ export {
     extractGroup,
     extractType,
     useCommandSearch,
+    Shortcut,
 };

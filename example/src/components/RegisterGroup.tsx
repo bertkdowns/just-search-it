@@ -17,7 +17,7 @@ function RegisterGroup({group}: { group: string }) {
     }, group, "command1")
 
     useRegisterCommand(groupCommand, {
-        name: "Command 1",
+        name: "Command 2",
         description: "This is a test command",
         icon: "👋",
         group: group,

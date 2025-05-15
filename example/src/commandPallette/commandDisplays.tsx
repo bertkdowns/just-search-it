@@ -1,4 +1,3 @@
-import type { Command } from "just-search-it";
 import { groupCommands, type CommandBinding } from "just-search-it";
 import { DialogClose } from "../components/ui/dialog";
 import {
@@ -7,6 +6,29 @@ import {
   AccordionTrigger,
 } from "../components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
+import type { Shortcut } from "just-search-it";
+
+
+export function KeyboardShortcut({children}: {children: string}){
+  return (
+    <kbd className="border rounded-sm bg-secondary p-1 text-xs text-muted-foreground">{children}</kbd>
+  )
+}
+
+export function KeyboardShortcuts({ shortcuts }: { shortcuts?: Shortcut[]}){
+  return ( shortcuts?.map((shortcut,index) => {
+    return (
+      <div key={index} className="ml-auto flex gap-1">
+        {shortcut.ctrlKey && <KeyboardShortcut>Ctrl</KeyboardShortcut>}
+        {shortcut.shiftKey && <KeyboardShortcut>Shift</KeyboardShortcut>}
+        {shortcut.altKey && <KeyboardShortcut>Alt</KeyboardShortcut>}
+        {shortcut.metaKey && <KeyboardShortcut>Cmd</KeyboardShortcut>}
+        <KeyboardShortcut>{shortcut.key}</KeyboardShortcut>
+      </div>
+    );
+  }))
+}
+
 
 
 export function CommandButton({selected, commandBinding}: {
@@ -26,6 +48,7 @@ export function CommandButton({selected, commandBinding}: {
     >
       <span className="text-xl">{commandBinding.metadata.icon}</span>
         {commandBinding.metadata.name}
+        <KeyboardShortcuts shortcuts={commandBinding.metadata.shortcuts} />
     </button>
     </DialogClose>
   );
@@ -57,11 +80,10 @@ export function CommandFeature({selected, commandBinding}: {
 }
 
 
-export function GroupAccordion({ commands }: { commands: Command[] }) {
+export function GroupAccordion({ commands }: { commands: CommandBinding<any>[] }) {
   const commandGroups = groupCommands(commands)
   return (
-    
-    <Accordion>
+    <Accordion type="single">
       {Object.entries(commandGroups).map(([group, commands]) => (
         <AccordionItem key={group} value={group}>
           <AccordionTrigger>{group}</AccordionTrigger>
@@ -79,7 +101,7 @@ export function GroupAccordion({ commands }: { commands: Command[] }) {
   )
 }
 
-export function GroupTabs({ commands }: { commands: Command[] }) {
+export function GroupTabs({ commands }: { commands: CommandBinding<any>[] }) {
   const commandGroups = groupCommands(commands)
   return (
     <Tabs defaultValue={Object.keys(commandGroups)[0]} className="w-full">

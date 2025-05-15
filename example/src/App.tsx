@@ -11,7 +11,7 @@ function App() {
   return (
     <CommandProvider>
       <div className="w-screen">
-        <h1>Vite + React</h1>
+        <h1>Just search it</h1>
         <CommandPallette />
         <RegisterHello />
         <RegisterName name="John Doe" />

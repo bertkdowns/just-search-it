@@ -1,3 +1,4 @@
+import { Shortcut } from "./shortcuts";
 // This file handles creating a single command.
 
 export type CommandMetadata = {
@@ -5,6 +6,7 @@ export type CommandMetadata = {
     description: string;
     group?: string;
     icon: string;
+    shortcuts?: Shortcut[];
 }
 
 export type CommandBinding<ReturnType> = {

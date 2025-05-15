@@ -68,7 +68,7 @@ export function GroupAccordion({ commands }: { commands: Command[] }) {
           <AccordionContent>
             {commands.map((command) => (
               <CommandButton
-                key={command.metadata.key}
+                key={command.metadata.name}
                 commandBinding={command}
               />
             ))}
@@ -94,7 +94,7 @@ export function GroupTabs({ commands }: { commands: Command[] }) {
         <TabsContent key={group} value={group} className="grid  grid-cols-3 grid-rows-3 gap-4">
           {commands.map((command) => (
             <CommandButton
-              key={command.metadata.key}
+              key={command.metadata.name}
               commandBinding={command}
             />
           ))}

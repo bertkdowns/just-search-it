@@ -75,8 +75,8 @@ export default function CommandPallette() {
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger onClick={() => setOpen(!open)}>
-          {open ? "close" : "open"}
+        <DialogTrigger onClick={() => setOpen(!open)} className="p-2 rounded-md bg-gray-200 w-100 cursor-pointer">
+          {open ? "close" : "search"}
         </DialogTrigger>
         <DialogContent className="w-[80vw]">
           <input

@@ -5,6 +5,7 @@ import { useContext, useEffect, createContext, useState, useRef } from "react";
 import type { CommandBinding, CommandBindpoint, CommandMetadata } from "./commandBinding";
 import {  addBinding,removeBinding, getArgKey, getCommandKey } from "./commandBinding";
 import React from "react";
+import { hasShortcut } from "./shortcuts";
 
 type CommandRegistry = Record<string, CommandBinding<any>>;
 
@@ -68,4 +69,15 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
 export function useCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>,...args: Args): ()=> (ReturnType | undefined) {
     const key = getArgKey(args);
     return ()=> command.argBindings[key]?.run() 
+}
+
+export function runCommandShortcut(registry: CommandRegistry, event: KeyboardEvent) {
+    Object.values(registry).some((command) => {
+        if(hasShortcut( event, command.metadata.shortcuts)){
+            event.preventDefault();
+            event.stopPropagation();
+            command.run();
+            return true;
+        }
+    })
 }

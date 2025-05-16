@@ -1,8 +1,10 @@
 import { useInputRequest, useRegisterCommand } from "just-search-it";
 import helloCommand from "../commands/helloCommand";
 import { z } from "zod";
+import { useState } from "react";
 
 function RegisterHello() {
+    const [name, setName] = useState("");
     const inputRequest = useInputRequest();
 
     useRegisterCommand(helloCommand, {
@@ -19,7 +21,7 @@ function RegisterHello() {
             const result = await inputRequest("What is your name?", 
                 ["Alice", "Bob", "Charlie"],
                 z.string());
-            console.log("Hello, " + result + "!");
+            setName(result)
         } )();
         return "Hello, World!";
     })
@@ -27,7 +29,7 @@ function RegisterHello() {
 
     return (
         <div>
-            <p>This component registers the "hello" command.</p>
+            <p>{name ? ("Hello, " + name) : ""}</p>
         </div>
     );
 }

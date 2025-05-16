@@ -4,7 +4,7 @@ import { createContext, useContext, useMemo, useCallback, useState, useRef } fro
 import { resolve } from "path"
 import { Input } from "postcss"
 
-type InputOption = string
+export type InputOption = string
 
 
 export type InputRequestHandler<T extends z.ZodTypeAny> = (
@@ -12,7 +12,7 @@ export type InputRequestHandler<T extends z.ZodTypeAny> = (
   options: InputOption[],
   type: T
 ) => Promise<z.infer<T>>
-type AnyInputRequestHandler = InputRequestHandler<z.ZodTypeAny>
+export type AnyInputRequestHandler = InputRequestHandler<z.ZodTypeAny>
 
 const DefaultInputRequestHandler: AnyInputRequestHandler = (title, options, type) => {
   return new Promise((resolve, reject) => {

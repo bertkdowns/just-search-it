@@ -1,6 +1,7 @@
-import { useOnInputRequest, useResolveInputRequest } from "just-search-it/src";
+import { useOnInputRequest, useResolveInputRequest } from "just-search-it";
 import { Dialog, DialogContent } from "../components/ui/dialog";
 import { useState, useEffect } from "react";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 export default function InputDialog(){
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ export default function InputDialog(){
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
-        <h1>{title}</h1>
+        <DialogTitle>{title}</DialogTitle>
         <input value={content} onChange={(e) => setContent(e.target.value)}></input>
         <div>
           {options.filter((option) => option.includes(content)).map((option, index) => {

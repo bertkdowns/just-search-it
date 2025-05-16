@@ -1,7 +1,10 @@
-import { useRegisterCommand } from "just-search-it";
+import { useInputRequest, useRegisterCommand } from "just-search-it";
 import helloCommand from "../commands/helloCommand";
+import { z } from "zod";
 
 function RegisterHello() {
+    const inputRequest = useInputRequest();
+
     useRegisterCommand(helloCommand, {
         name: "hello",
         description: "Say hello",
@@ -12,6 +15,12 @@ function RegisterHello() {
         }]
     }, () => {
         console.log("Hello, World!");
+        (async () => {
+            const result = await inputRequest("What is your name?", 
+                ["Alice", "Bob", "Charlie"],
+                z.string());
+            console.log(result);
+        } )();
         return "Hello, World!";
     })
 

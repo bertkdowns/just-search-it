@@ -35,8 +35,12 @@ export type InputResolveHandlers = {
   resolve: (value: z.infer<z.ZodTypeAny>) => void;
   reject: (reason?: any) => void;
 }
+export type InputResolveCallType = {
+    resolve:(value: string) => void
+    reject:(reason?: any) => void
+  }
 
-const InputResolveContext = createContext<React.Ref<(value: string) => void> | null>(null);
+const InputResolveContext = createContext<React.Ref<InputResolveCallType> | null>(null);
 
 export function useInputRequest() {
   const inputRequestRef = useContext(InputContext);
@@ -68,24 +72,27 @@ export function useOnInputRequest(handler: InputRequestEventHandler) {
 
 export function useResolveInputRequest() {
   const resolveRef = useContext(InputResolveContext);
-  if (!resolveRef) {
-    console.error("Input request handler not available. Is a InputProvider wrapping this component?")
-    return;
-  }
   function handleResolve(value: string) {
     if (!resolveRef?.current) {
       console.error("Input request handler not available. Has an input request been made?")
       return;
     }
-    resolveRef.current(value);
+    resolveRef.current?.resolve(value);
   }
-  return handleResolve;
+  function handleReject(reason: any) {
+    if (!resolveRef?.current) {
+      console.error("Input request handler not available. Has an input request been made?")
+      return;
+    }
+    resolveRef.current?.reject(reason);
+  }
+  return [handleResolve, handleReject] as const;
 }
 
 export function InputProvider({ children }: { children: React.ReactNode }) {
   const inputRequestRef = useRef<AnyInputRequestHandler>(DefaultInputRequestHandler);
   const onInputRequestRef = useRef<InputRequestEventHandler>(null);
-  const resolveRef = useRef<(value: string) => void>(null);
+  const resolveRef = useRef<InputResolveCallType>(null);
 
 
   // const [inputTitle,setInputTitle] = useState<string>("");
@@ -104,7 +111,17 @@ export function InputProvider({ children }: { children: React.ReactNode }) {
       console.error("No promise callback available");
     }
   }
-  resolveRef.current = handleResolve;
+  const handleReject = (reason: any) => {
+    if (promiseCallback) {
+      promiseCallback.reject(reason);
+    } else {
+      console.error("No promise callback available");
+    }
+  }
+  resolveRef.current = {
+    resolve: handleResolve,
+    reject: handleReject
+  }
 
 
   const handleInputRequest = <T extends z.ZodTypeAny>(

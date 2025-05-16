@@ -1,6 +1,6 @@
 
 import './App.css'
-import { CommandProvider, InputProvider } from 'just-search-it'
+import { CommandProvider} from 'just-search-it'
 import RegisterHello from './components/RegisterHello'
 import RegisterName from './components/RegisterName'
 import RegisterGroup from './components/RegisterGroup'
@@ -11,7 +11,6 @@ function App() {
 
   return (
     <CommandProvider>
-      <InputProvider>
       <div className="w-screen">
         <h1>Just search it</h1>
         <CommandPallette />
@@ -31,7 +30,6 @@ function App() {
           </p>
         </div>
       </div>
-      </InputProvider>
     </CommandProvider>
   )
 }

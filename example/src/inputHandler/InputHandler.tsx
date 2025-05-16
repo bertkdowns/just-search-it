@@ -1,22 +1,24 @@
-import { useOnInputRequest, useResolveInputRequest } from "just-search-it";
 import { Dialog, DialogContent, DialogDescription } from "../components/ui/dialog";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useInputState } from "./inputSystem";
+
 
 export default function InputDialog(){
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [options, setOptions] = useState<string[]>([]);
   const [content, setContent] = useState("");
-  const [resolve, reject] = useResolveInputRequest();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  useOnInputRequest((title, options, _type) => {
+  const handleInputRequest = (title, options, _type) => {
     setOpen(true);
     setContent("");
     setTitle(title);
     setOptions(options);
-  })
+  }
+
+  const [resolve,reject] = useInputState(handleInputRequest);
 
   const handleOpenChange = useCallback((open: boolean) => {
     setOpen(open);

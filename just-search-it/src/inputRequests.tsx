@@ -1,156 +1,106 @@
-import { promise, set, z } from "zod"
-import React from "react"
-import { createContext, useContext, useMemo, useCallback, useState, useRef } from "react"
-import { resolve } from "path"
-import { Input } from "postcss"
+import { promise, set, z } from "zod";
+import React from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useCallback,
+  useState,
+  useRef,
+} from "react";
+import { resolve } from "path";
+import { Input } from "postcss";
 
-export type InputOption = string
+export type InputOption = string;
 
-
-export type InputRequestHandler<T extends z.ZodTypeAny> = (
+export type InputRequest<T extends z.ZodTypeAny> = (
   title: string,
   options: InputOption[],
   type: T
-) => Promise<z.infer<T>>
-export type AnyInputRequestHandler = InputRequestHandler<z.ZodTypeAny>
+) => Promise<z.infer<T>>;
+export type AnyInputRequest = InputRequest<z.ZodTypeAny>;
 
-const DefaultInputRequestHandler: AnyInputRequestHandler = (title, options, type) => {
-  return new Promise((resolve, reject) => {
-    reject(new Error("Input request handler not available"));
-  });
-}
-
-const InputContext = createContext<React.Ref<AnyInputRequestHandler> | null>(null);
-
-
-export type InputRequestEventHandler = (
+export type InputRequestCallback = (
   title: string,
   options: InputOption[],
   type: z.ZodTypeAny
 ) => void;
-const InputRequestEventContext = createContext<React.Ref<InputRequestEventHandler | null> | null>(null);
-
 
 export type InputResolveHandlers = {
   resolve: (value: z.infer<z.ZodTypeAny>) => void;
   reject: (reason?: any) => void;
-}
+};
 export type InputResolveCallType = {
-    resolve:(value: string) => void
-    reject:(reason?: any) => void
-  }
+  resolve: (value: string) => void;
+  reject: (reason?: any) => void;
+};
 
-const InputResolveContext = createContext<React.Ref<InputResolveCallType> | null>(null);
+export function createInputSystem() {
+  // Store the input type, so we can parse the result
+  let inputType: z.ZodTypeAny | null = null;
+  // Store the input request handler. This is set by the dialog component, and we call this
+  // when we want to show the input dialog.
+  let onInputRequest: InputRequestCallback | null = null;
+  // Store the resolve and reject functions for the input request promise.
+  // We can call these when the user submits the input or cancels the dialog.
+  let resolvePromise: ((value: string) => void) | null = null;
+  let rejectPromise: ((reason?: any) => void) | null = null;
 
-export function useInputRequest() {
-  const inputRequestRef = useContext(InputContext);
-
-  const inputRequest: AnyInputRequestHandler = async (
-    title,
-    options,
-    type
-  ) => {
-    if (!inputRequestRef?.current) {
-      console.error("Input request handler not available. Is a InputProvider wrapping this component?")
-      throw new Error("Input request handler not available");
-    }
-    return await inputRequestRef?.current(title, options, type);
-  }
-
-  return useCallback(inputRequest, []);
-}
-
-
-export function useOnInputRequest(handler: InputRequestEventHandler) {
-  const inputRequestRef = useContext(InputRequestEventContext);
-  if (!inputRequestRef) {
-    console.error("Input request handler not available. Is a InputProvider wrapping this component?")
-    return;
-  }
-  inputRequestRef.current = handler;
-}
-
-export function useResolveInputRequest() {
-  const resolveRef = useContext(InputResolveContext);
-  function handleResolve(value: string) {
-    if (!resolveRef?.current) {
-      console.error("Input request handler not available. Has an input request been made?")
-      return;
-    }
-    resolveRef.current?.resolve(value);
-  }
-  function handleReject(reason: any) {
-    if (!resolveRef?.current) {
-      console.error("Input request handler not available. Has an input request been made?")
-      return;
-    }
-    resolveRef.current?.reject(reason);
-  }
-  return [handleResolve, handleReject] as const;
-}
-
-export function InputProvider({ children }: { children: React.ReactNode }) {
-  const inputRequestRef = useRef<AnyInputRequestHandler>(DefaultInputRequestHandler);
-  const onInputRequestRef = useRef<InputRequestEventHandler>(null);
-  const resolveRef = useRef<InputResolveCallType>(null);
-
-
-  // const [inputTitle,setInputTitle] = useState<string>("");
-  // const [inputValue,setInputValue] = useState<string>("");
-  // const [inputOptions,setInputOptions] = useState<InputOption[]>([]);
-
-
-
-  const [inputType, setInputType] = useState<z.ZodTypeAny>(z.string());
-
-  const internalResolveRef = useRef<InputResolveHandlers | null>(null);
-
-  const handleResolve = (value: string) => {
-    const parsed_value = inputType.parse(value);
-    if (internalResolveRef.current) {
-      internalResolveRef.current?.resolve(parsed_value);
-    } else {
-      console.error("No promise callback available");
-    }
-  }
-  const handleReject = (reason: any) => {
-    if (internalResolveRef.current) {
-      internalResolveRef.current.reject(reason);
-    } else {
-      console.error("No promise callback available");
-    }
-
-  }
-  resolveRef.current = {
-    resolve: handleResolve,
-    reject: handleReject
-  };
-
-
-  const handleInputRequest = <T extends z.ZodTypeAny>(
+  // Because the actual promises and the onInputRequest handler changes when the component re-renders,
+  // We make these wrapper functions that can always access the latest values.
+  const requestUserInput = <T extends z.ZodTypeAny>(
     title: string,
     options: InputOption[],
     type: T
   ): Promise<z.infer<T>> => {
     // Store the type, for later parsing
-    setInputType(type);
+    inputType = type;
     // Call the event handler on the input component, so it can show the input dialog
-    onInputRequestRef.current?.(title, options, type);
+    if (onInputRequest) {
+      onInputRequest(title, options, type);
+    } else {
+      console.error("No input request handler available");
+    }
     // Create a promise that will be resolved when the input is received
     const inputPromise = new Promise<z.infer<T>>((resolve, reject) => {
-      internalResolveRef.current = { resolve, reject };
+      resolvePromise = resolve;
+      rejectPromise = reject;
     });
     return inputPromise;
-  }
+  };
 
-  inputRequestRef.current = handleInputRequest;
-  return (
-    <InputContext.Provider value={inputRequestRef}>
-      <InputRequestEventContext.Provider value={onInputRequestRef}>
-        <InputResolveContext.Provider value={resolveRef}>
-          {children}
-        </InputResolveContext.Provider>
-      </InputRequestEventContext.Provider>
-    </InputContext.Provider>
-  )
+  const resolveInput = (value: string) => {
+    if (!inputType) {
+      console.error("No input type available");
+      rejectInput("No input type available");
+      return;
+    }
+    const parsed_value = inputType.parse(value);
+    if (resolvePromise) {
+      resolvePromise(parsed_value);
+    } else {
+      console.error("No promise callback available");
+    }
+  };
+
+  const rejectInput = (reason: any) => {
+    if (rejectPromise) {
+      rejectPromise(reason);
+    } else {
+      console.error("No promise callback available");
+    }
+  };
+
+  return {
+    requestUserInput,
+    useInputState: (
+      handler: InputRequestCallback
+    ): [
+      resolveInput: (value: string) => void,
+      rejectInput: (error: any) => void
+     ] => {
+      onInputRequest = handler;
+      return [resolveInput, rejectInput] as const;
+    },
+  };
 }

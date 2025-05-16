@@ -1,11 +1,11 @@
-import { useInputRequest, useRegisterCommand } from "just-search-it";
+import { requestUserInput } from "../inputHandler/inputSystem";
+import { useRegisterCommand } from "just-search-it";
 import helloCommand from "../commands/helloCommand";
 import { z } from "zod";
 import { useState } from "react";
 
 function RegisterHello() {
     const [name, setName] = useState("");
-    const inputRequest = useInputRequest();
 
     useRegisterCommand(helloCommand, {
         name: "hello",
@@ -18,7 +18,7 @@ function RegisterHello() {
     }, () => {
         console.log("Hello, World!");
         (async () => {
-            const result = await inputRequest("What is your name?", 
+            const result = await requestUserInput("What is your name?", 
                 ["Alice", "Bob", "Charlie"],
                 z.string());
             setName(result)

@@ -4,8 +4,8 @@ import { defineCommand } from "./commandBinding";
 import { groupCommands, extractCommand, extractGroup, extractType } from "./commandFiltering";
 import { useCommandSearch } from "./commandSearch";
 import type { Shortcut } from "./shortcuts";
-import {InputProvider,useOnInputRequest,useResolveInputRequest,useInputRequest} from "./inputRequests"
-import type { InputRequestEventHandler } from "./inputRequests";
+import { createInputSystem} from "./inputRequests"
+import type { InputRequestCallback } from "./inputRequests";
 
 export {
     CommandBinding,
@@ -22,9 +22,6 @@ export {
     extractType,
     useCommandSearch,
     Shortcut,
-    InputProvider,
-    useOnInputRequest,
-    useResolveInputRequest,
-    useInputRequest,
-    InputRequestEventHandler,
+    createInputSystem,
+    InputRequestCallback as InputRequestEventHandler,
 };

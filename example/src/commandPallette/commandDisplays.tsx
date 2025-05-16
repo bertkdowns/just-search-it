@@ -113,7 +113,7 @@ export function GroupTabs({ commands }: { commands: CommandBinding<any>[] }) {
         ))}
       </TabsList>
       {Object.entries(commandGroups).map(([group, commands]) => (
-        <TabsContent key={group} value={group} className="grid  grid-cols-3 grid-rows-3 gap-4">
+        <TabsContent key={group} value={group} className="grid grid-cols-3 grid-rows-3 gap-4">
           {commands.map((command) => (
             <CommandButton
               key={command.metadata.name}

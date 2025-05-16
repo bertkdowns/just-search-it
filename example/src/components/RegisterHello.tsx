@@ -19,7 +19,7 @@ function RegisterHello() {
             const result = await inputRequest("What is your name?", 
                 ["Alice", "Bob", "Charlie"],
                 z.string());
-            console.log(result);
+            console.log("Hello, " + result + "!");
         } )();
         return "Hello, World!";
     })

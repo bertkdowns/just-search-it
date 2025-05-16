@@ -88,7 +88,6 @@ export function useCommandSearch(
           .forEach(([, items]) => {
             items.forEach((item) => {
               if (rowNumber++ === rowIndex) {
-                console.log("found command", item.item.command);
                 onCommandSelect(item.item.command);
                 setColumn(0);
                 setRow(0);

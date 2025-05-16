@@ -45,16 +45,16 @@ const InputResolveContext = createContext<React.Ref<InputResolveCallType> | null
 export function useInputRequest() {
   const inputRequestRef = useContext(InputContext);
 
-  const inputRequest: AnyInputRequestHandler = (
+  const inputRequest: AnyInputRequestHandler = async (
     title,
     options,
     type
   ) => {
     if (!inputRequestRef?.current) {
       console.error("Input request handler not available. Is a InputProvider wrapping this component?")
-      return Promise.reject(new Error("Input request handler not available"));
+      throw new Error("Input request handler not available");
     }
-    inputRequestRef?.current(title, options, type);
+    return await inputRequestRef?.current(title, options, type);
   }
 
   return useCallback(inputRequest, []);
@@ -100,28 +100,31 @@ export function InputProvider({ children }: { children: React.ReactNode }) {
   // const [inputOptions,setInputOptions] = useState<InputOption[]>([]);
 
 
+
   const [inputType, setInputType] = useState<z.ZodTypeAny>(z.string());
-  const [promiseCallback, setPromiseCallback] = useState<InputResolveHandlers | null>(null);
+
+  const internalResolveRef = useRef<InputResolveHandlers | null>(null);
 
   const handleResolve = (value: string) => {
     const parsed_value = inputType.parse(value);
-    if (promiseCallback) {
-      promiseCallback.resolve(parsed_value);
+    if (internalResolveRef.current) {
+      internalResolveRef.current?.resolve(parsed_value);
     } else {
       console.error("No promise callback available");
     }
   }
   const handleReject = (reason: any) => {
-    if (promiseCallback) {
-      promiseCallback.reject(reason);
+    if (internalResolveRef.current) {
+      internalResolveRef.current.reject(reason);
     } else {
       console.error("No promise callback available");
     }
+
   }
   resolveRef.current = {
     resolve: handleResolve,
     reject: handleReject
-  }
+  };
 
 
   const handleInputRequest = <T extends z.ZodTypeAny>(
@@ -135,7 +138,7 @@ export function InputProvider({ children }: { children: React.ReactNode }) {
     onInputRequestRef.current?.(title, options, type);
     // Create a promise that will be resolved when the input is received
     const inputPromise = new Promise<z.infer<T>>((resolve, reject) => {
-      setPromiseCallback({ resolve, reject });
+      internalResolveRef.current = { resolve, reject };
     });
     return inputPromise;
   }

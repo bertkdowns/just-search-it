@@ -35,7 +35,6 @@ export function defineCommand<Args extends any[], ReturnType extends any>(key:st
 
     const command: CommandBindpoint<Args,ReturnType> = Object.assign(
         (...args: Args) => {
-            console.log("Executing command")
             // Use the arguments to create a unique key
             const key = getArgKey(args);
             // Find the command in the argBindings,

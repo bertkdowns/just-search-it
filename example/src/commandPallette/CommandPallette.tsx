@@ -52,8 +52,10 @@ export default function CommandPallette() {
   const [inputRef, data, column, row] = useCommandSearch(
     numColumns,
     searchTerm,
+    open,
     (command) => {
       setOpen(false);
+      setSearchTerm("");
     }
   );
 

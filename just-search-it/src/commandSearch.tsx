@@ -35,6 +35,7 @@ type GroupedResult = [string, SearchResult[]][];
 export function useCommandSearch(
   numColumns: number,
   searchTerm: string,
+  open: boolean,
   onCommandSelect: (command: Command) => void
 ): [
   inputRef: React.RefObject<HTMLInputElement | null>,
@@ -71,7 +72,7 @@ export function useCommandSearch(
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) return;  // ignore repeated keydown events (from long-press)
       runCommandShortcut(commands, event);
-      if (!open) return;
+      if(!open) return;
       if (event.key === "ArrowDown") {
         setRow((prev) => Math.min(prev + 1, Object.keys(commands).length - 1));
       } else if (event.key === "ArrowUp") {
@@ -87,8 +88,11 @@ export function useCommandSearch(
           .forEach(([, items]) => {
             items.forEach((item) => {
               if (rowNumber++ === rowIndex) {
-                item.item.command.run();
+                console.log("found command", item.item.command);
                 onCommandSelect(item.item.command);
+                setColumn(0);
+                setRow(0);
+                item.item.command.run();
               }
             });
           });
@@ -104,7 +108,7 @@ export function useCommandSearch(
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open, commands, rowIndex]);
+  }, [open, commands, rowIndex,columnIndex,groupedMap,setRow,setColumn]);
 
   return [inputRef, columns, columnIndex, rowIndex] as const;
 }

@@ -15,14 +15,12 @@ function RegisterHello() {
             key: "e",
             ctrlKey: true,
         }]
-    }, () => {
+    }, async () => {
         console.log("Hello, World!");
-        (async () => {
-            const result = await requestUserInput("What is your name?", 
-                ["Alice", "Bob", "Charlie"],
-                z.string());
-            setName(result)
-        } )();
+        const result = await requestUserInput("What is your name?", 
+            ["Alice", "Bob", "Charlie"],
+            z.string());
+        setName(result)
         return "Hello, World!";
     })
 

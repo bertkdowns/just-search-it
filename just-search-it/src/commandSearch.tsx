@@ -47,6 +47,7 @@ export function useCommandSearch(
   const [rowIndex, setRow] = React.useState(0); // how far down the list we are
   const [columnIndex, setColumn] = React.useState(1); // which column we are in. there are 3 columns, for 3 different command groups
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const centerOffset = Math.floor(numColumns / 2); // so that the first group is in the center column
 
   const commandList = Object.entries(commands).map(([key, command]) => ({
     key: key,
@@ -66,7 +67,7 @@ export function useCommandSearch(
   );
   const columns = Array(numColumns)
     .fill(0)
-    .map((_, col) => groupedMap.filter((_, i) => i % numColumns === col));
+    .map((_, col) => groupedMap.filter((_, i) => (i + centerOffset) % numColumns === col));
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -84,7 +85,7 @@ export function useCommandSearch(
       } else if (event.key === "Enter") {
         let rowNumber = 0;
         groupedMap
-          .filter((_, i) => i % numColumns === columnIndex)
+          .filter((_, i) => (i + centerOffset) % numColumns === columnIndex)
           .forEach(([, items]) => {
             items.forEach((item) => {
               if (rowNumber++ === rowIndex) {

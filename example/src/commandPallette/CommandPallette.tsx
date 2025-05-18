@@ -95,7 +95,8 @@ export default function CommandPallette() {
             {searchTerm.length == 0 && <CommandBrowser />}
             <div className="flex flex-row">
               {ColumnWidths.map((colClass, index) => (
-                <div key={index} className={`${colClass} p-2`}>
+                data[index].length == 0 ? null : (
+                <div key={index} className={`${colClass} p-2 grow`}>
                   <Column
                     items={data[index]} 
                     columnIndex={index}
@@ -103,6 +104,7 @@ export default function CommandPallette() {
                     selectedRowIndex={row}
                   />
                 </div>
+                )
               ))}
             </div>
           </div>

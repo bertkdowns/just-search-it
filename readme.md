@@ -70,12 +70,10 @@ npm run test
 ```
 
 
-# To Do
-
 ### Input
 
-Handle input. This isn't actually dependent on the command library, but it would be nice to at least have an example.
 
+TODO: document this properly.
 
 ```
 await InputRequest("Choose a country",options: [
@@ -86,14 +84,13 @@ await InputRequest("Choose a country",options: [
 )
 ```
 
-We can handle all the filtering of options, and validating of types. maybe using a library like yup or that MCP one. 
 
-Because it's await, you can chain these easily. if the user presses escape that can throw an error, and you can try-catch that.
+# To Do
 
 
 ### MCP/LLM
 
-Finally, add MCP support, or DIY it. a LLM can choose from the list of commands, and then InputRequest can be used to prompt the LLM for inputs one at a time.
+Add MCP support, or DIY it. a LLM can choose from the list of commands, and then InputRequest can be used to prompt the LLM for inputs one at a time.
 
 I'm guessing we're gonna be running a MCP server client side, or something like that, because we have to dynamically change which actions are avaliable. We're gonna have to figure out how that works.
 

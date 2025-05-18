@@ -35,8 +35,42 @@ addBinding(
 const result = launch("Firefox");
 ```
 
+### Publishing
 
-To do:
+How to publish the package:
+
+```bash
+# go into the just-search-it subdirectory, we don't want to publish the example, only the library
+cd just-search-it
+npm install # Install all dependencies
+npm run build # build with tsup
+npm version patch # or major, or minor - bumps the version number
+npm login
+npm publish
+```
+
+### Running the example
+
+```bash
+cd example
+npm install
+npm run dev
+```
+
+### Running the tests
+
+```bash
+cd example
+npx playwright test
+```
+
+```bash
+cd just-search-it
+npm run test
+```
+
+
+# To Do
 
 ### Input
 
@@ -66,9 +100,4 @@ I'm guessing we're gonna be running a MCP server client side, or something like 
 Actually, MCP servers might be too much. we just need to understand how tooling works. (though maybe being able to work with MCP servers so the LLM can access both the commands and other MCP commands might be even better - e.g so an LLM can outsource some computation, and then run a command on the result.)
 
 When you type something in the search bar, if there's no results, it's considered a LLM prompt when you hit enter.
-
-### NPM
-
-Gotta publish this to NPM, and also add it to the platform.
-
 

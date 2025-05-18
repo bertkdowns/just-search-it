@@ -14,21 +14,6 @@ export function groupCommands(commands: Command[]) {
   return grouped;
 }
 
-// Extracts a command from the command list by its key
-// and returns the command and the rest of the command list.
-// Dont know if this works.
-export function extractCommand(
-  command: Command[],
-  key: string
-): [command: Command | undefined, rest: Command[]] {
-  const commandList = command.find((cmd) => cmd.metadata.key === key);
-  if (!commandList) {
-    return [undefined, command];
-  }
-  const rest = command.filter((cmd) => cmd.metadata.key !== key);
-  return [commandList, rest] as const;
-}
-
 
 export function extractGroup(commands: Command[], groupKey: string): [Command[], Command[]] {
   const filteredCommands = commands.filter(command => command.metadata.group === groupKey);

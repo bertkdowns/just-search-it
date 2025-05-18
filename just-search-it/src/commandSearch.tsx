@@ -36,7 +36,7 @@ export function useCommandSearch(
   numColumns: number,
   searchTerm: string,
   open: boolean,
-  onCommandSelect: (command: Command) => void
+  onCommandSelect: (command: CommandBinding<any>) => void
 ): [
   inputRef: React.RefObject<HTMLInputElement | null>,
   data: GroupedResult[], // the data to display, grouped into columns

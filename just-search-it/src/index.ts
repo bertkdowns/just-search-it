@@ -1,7 +1,7 @@
 import type { CommandBinding, CommandBindpoint, CommandMetadata, } from "./commandBinding";
 import { CommandProvider, useCommands, useCommand, useRegisterCommand } from "./commandRegistry";
 import { defineCommand } from "./commandBinding";
-import { groupCommands, extractCommand, extractGroup, extractType } from "./commandFiltering";
+import { groupCommands, extractGroup, extractType } from "./commandFiltering";
 import { useCommandSearch } from "./commandSearch";
 import type { Shortcut } from "./shortcuts";
 import { createInputSystem} from "./inputRequests"
@@ -17,7 +17,6 @@ export {
     defineCommand,
     useRegisterCommand,
     groupCommands,
-    extractCommand,
     extractGroup,
     extractType,
     useCommandSearch,

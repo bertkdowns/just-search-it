@@ -10,9 +10,9 @@ import { hasShortcut } from "./shortcuts";
 type CommandRegistry = Record<string, CommandBinding<any>>;
 
 const CommandContext = createContext<CommandRegistry>({});
-const SetCommandContext = createContext<React.Ref<React.Dispatch<React.SetStateAction<CommandRegistry>>>>(null!);
+const SetCommandContext = createContext<React.RefObject<React.Dispatch<React.SetStateAction<CommandRegistry>>>>(null!);
 
-export function CommandProvider({children}){
+export function CommandProvider({children}:{children: React.ReactNode}) {
     const [commandContext, setCommandContext] = useState<CommandRegistry>({});
     const setCommandRef = useRef<React.Dispatch<React.SetStateAction<CommandRegistry>>>(setCommandContext);
 

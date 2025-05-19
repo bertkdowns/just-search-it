@@ -27,7 +27,7 @@ export function CommandProvider({children}:{children: React.ReactNode}) {
     )
 }
 
-export function useCommands() {
+export function useCommands(): CommandRegistry {
     const commandContext = useContext(CommandContext);
     return commandContext;
 }
@@ -66,11 +66,25 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
     }, [command,setCommandContext])
 }
 
+// A hook where you put the arguments
+// in the hook and then you can call the command
 export function useCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>,...args: Args): ()=> (ReturnType | undefined) {
     const key = getArgKey(args);
     return ()=> command.argBindings[key]?.run() 
 }
 
+
+// A hook that returns a function that takes the arguments.
+// This is probably better than the above one, as it's more flexible.
+export function useRunCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>): () => (ReturnType | undefined) {
+    return (...args: Args) => {
+        const key = getArgKey(args)
+        return command.argBindings[key]?.run();
+    }
+}
+
+
+// Used to handle the keyboard shortcuts
 export function runCommandShortcut(registry: CommandRegistry, event: KeyboardEvent) {
     Object.values(registry).some((command) => {
         if(hasShortcut( event, command.metadata.shortcuts)){

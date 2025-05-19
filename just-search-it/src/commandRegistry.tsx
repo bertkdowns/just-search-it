@@ -40,7 +40,10 @@ export function useSetCommands() {
 export function useRegisterCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, metadata: CommandMetadata, fn: () => ReturnType, ...args: Args){
     const setCommandContext = useSetCommands();
     const key = addBinding(command, metadata, fn, ...args);
+    const commandObject = command.argBindings[key]
     
+    const commandKey =  command.key + '.' + key;
+
     useEffect(()=>{
         if (!setCommandContext) {
             console.error("Command context is not available. Make sure that you have wrapped this component in a CommandProvider.");
@@ -49,12 +52,10 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
         // Register the command in the context
         setCommandContext.current((prev: CommandRegistry) => ({
             ...prev,
-            [command.key + '.' + key]: {
-                metadata: metadata,
-                run: fn
-            }
+            [command.key + '.' + key]: commandObject
         }));
         return () => {
+            console.log("Unregistering command: ", command.key + '.' + key);
             // Unregister the command when the component unmounts
             removeBinding(command, key);
             setCommandContext.current((prev: CommandRegistry) => {
@@ -63,7 +64,7 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
                 return newContext;
             });
         }
-    }, [command,setCommandContext])
+    }, [command,setCommandContext,commandKey])
 }
 
 // A hook where you put the arguments
@@ -76,7 +77,7 @@ export function useCommand<Args extends any[], ReturnType>(command: CommandBindp
 
 // A hook that returns a function that takes the arguments.
 // This is probably better than the above one, as it's more flexible.
-export function useRunCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>): () => (ReturnType | undefined) {
+export function useRunCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>): (...args: Args) => (ReturnType | undefined) {
     return (...args: Args) => {
         const key = getArgKey(args)
         return command.argBindings[key]?.run();

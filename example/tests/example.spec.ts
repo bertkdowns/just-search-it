@@ -19,10 +19,21 @@ test('the search bar works', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await page.getByRole('button', { name: 'search' }).click();
   await page.getByRole('textbox').fill('hello');
-  await page.getByRole('textbox').press('ArrowLeft');
   await page.getByRole('textbox').press('Enter');
-  await expect(page.getByRole('paragraph')).toContainText('Choose from the below options:');
+  await expect(page.getByLabel("choose options")).toContainText('Choose from the below options:');
   await page.getByRole('textbox').fill('James');
   await page.getByRole('textbox').press('Enter');
   await expect(page.locator('#root')).toContainText('Hello, James');
+})
+
+test('state updates properly', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('button', { name: 'search' }).click();
+  await page.getByRole('button', { name: '🌙 dark mode Ctrl o' }).click();
+  await expect(page.locator('#root')).toContainText('Dark Mode');
+  await page.getByRole('button', { name: 'search' }).click();
+  await expect(page.locator('body',)).toContainText('🌙light modeCtrlo');
+  await page.getByRole('button', { name: '🌙 light mode Ctrl o' }).click();
+  await expect(page.locator('#root')).toContainText('Light Mode');
+  await expect(page.locator('#root')).toContainText('Light Mode');
 })

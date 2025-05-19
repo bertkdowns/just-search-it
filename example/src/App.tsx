@@ -6,6 +6,7 @@ import RegisterName from './components/RegisterName'
 import RegisterGroup from './components/RegisterGroup'
 import CommandPallette from './commandPallette/CommandPallette'
 import InputDialog from './inputHandler/InputHandler'
+import RegisterModeChange from './components/RegisterModeChange'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <CommandPallette />
         <InputDialog />
         <RegisterHello />
+        <RegisterModeChange />
         <RegisterName name="John Doe" />
         <RegisterName name="Jane Doe" />
         <RegisterName name="Alice" />

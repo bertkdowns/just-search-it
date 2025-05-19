@@ -1,6 +1,6 @@
 "use client";
 
-import { useCommands, extractCommand } from "just-search-it";
+import { useCommands } from "just-search-it";
 import { CommandFeature, GroupAccordion, GroupTabs } from "./commandDisplays";
 
 export function CommandBrowser() {

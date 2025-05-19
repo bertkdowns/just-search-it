@@ -1,8 +1,9 @@
-import type { CommandBinding, CommandBindpoint, CommandMetadata, } from "./commandBinding";
-import { CommandProvider, useCommands, useCommand, useRegisterCommand } from "./commandRegistry";
+import type { CommandBinding, CommandBindpoint, CommandMetadata, getCommandKey, getArgKey} from "./commandBinding";
+import { CommandProvider, useCommands, useCommand, useRegisterCommand, useRunCommand } from "./commandRegistry";
 import { defineCommand } from "./commandBinding";
 import { groupCommands, extractGroup, extractType } from "./commandFiltering";
 import { useCommandSearch } from "./commandSearch";
+import type { GroupedResult, SearchResult } from "./commandSearch";
 import type { Shortcut } from "./shortcuts";
 import { createInputSystem} from "./inputRequests"
 import type { InputRequestCallback } from "./inputRequests";
@@ -22,5 +23,8 @@ export {
     useCommandSearch,
     Shortcut,
     createInputSystem,
-    InputRequestCallback as InputRequestEventHandler,
+    InputRequestCallback,
+    useRunCommand,
+    getArgKey, getCommandKey,
+    GroupedResult, SearchResult
 };

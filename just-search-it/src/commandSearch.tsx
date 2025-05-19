@@ -24,13 +24,13 @@ const fuseOptions = {
 // grid grid-cols-10
 const ColumnWidths = ["w-3/10", "w-4/10", "w-3/10"];
 
-type SearchResult = FuseResult<{
+export type SearchResult = FuseResult<{
   key: string;
   command: CommandBinding<any>;
 }>;
 type GroupedMap = Record<string, SearchResult[]>;
 
-type GroupedResult = [string, SearchResult[]][];
+export type GroupedResult = [string, SearchResult[]][];
 
 export function useCommandSearch(
   numColumns: number,

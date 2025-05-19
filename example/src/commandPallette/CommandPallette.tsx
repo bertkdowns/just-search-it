@@ -41,7 +41,6 @@ type SearchResult = FuseResult<{
   key: string;
   command: CommandBinding<any>;
 }>;
-type GroupedMap = Record<string, SearchResult[]>;
 
 type GroupedResult = [string, SearchResult[]][];
 
@@ -82,7 +81,7 @@ export default function CommandPallette() {
         <DialogTrigger onClick={() => setOpen(!open)} className="p-2 rounded-md bg-gray-200 w-100 cursor-pointer">
           {open ? "close" : "search"}
         </DialogTrigger>
-        <DialogContent className="w-[80vw]">
+        <DialogContent className="w-[80vw]" aria-description="Search for commands">
           <input
             ref={inputRef}
             value={searchTerm}

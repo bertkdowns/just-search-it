@@ -51,7 +51,7 @@ export default function InputDialog(){
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>Choose from the below options:</DialogDescription>
+        <DialogDescription aria-label="choose options">Choose from the below options:</DialogDescription>
         <input value={content} onChange={(e) => setContent(e.target.value)}></input>
         <div>
           {options.filter((option) => option.includes(content)).map((option, index) => {

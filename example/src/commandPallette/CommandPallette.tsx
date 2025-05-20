@@ -16,23 +16,6 @@ import {
 import { CommandBrowser } from "./CommandBrowser";
 import { CommandButton } from "./commandDisplays";
 
-const fuseOptions = {
-  // isCaseSensitive: false,
-  // includeScore: false,
-  // ignoreDiacritics: false,
-  // shouldSort: true,
-  // includeMatches: false,
-  // findAllMatches: false,
-  // minMatchCharLength: 1,
-  // location: 0,
-  // threshold: 0.6,
-  // distance: 100,
-  // useExtendedSearch: false,
-  // ignoreLocation: false,
-  // ignoreFieldNorm: false,
-  // fieldNormWeight: 1,
-  keys: ["command.metadata.name", "command.metadata.description"],
-};
 
 // grid grid-cols-10
 const ColumnWidths = ["w-3/10", "w-4/10", "w-3/10"];
@@ -48,7 +31,7 @@ export default function CommandPallette() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const numColumns = 3;
-  const [inputRef, data, column, row] = useCommandSearch(
+  const [inputRef, featured, data, selected] = useCommandSearch(
     numColumns,
     searchTerm,
     open,
@@ -90,17 +73,24 @@ export default function CommandPallette() {
             }}
           ></input>
           <div>
-            <DialogTitle>Search</DialogTitle>
+            <DialogTitle className="hidden">Search</DialogTitle>
             {searchTerm.length == 0 && <CommandBrowser />}
+            <div className="max-w-[600px] mx-auto">
+            <Column
+              items={featured}
+              selected={selected}
+            />
+            </div>
+            {data[0].length != 0 &&(
+              <h2 className="text-xl text-center pt-4">More Results</h2>
+            )}
             <div className="flex flex-row">
               {ColumnWidths.map((colClass, index) => (
                 data[index].length == 0 ? null : (
                 <div key={index} className={`${colClass} p-2 grow`}>
                   <Column
                     items={data[index]} 
-                    columnIndex={index}
-                    selectedColumnIndex={column}
-                    selectedRowIndex={row}
+                    selected={selected}
                   />
                 </div>
                 )
@@ -115,16 +105,11 @@ export default function CommandPallette() {
 
 function Column({
   items,
-  columnIndex,
-  selectedColumnIndex,
-  selectedRowIndex,
+  selected
 }: {
   items: GroupedResult;
-  columnIndex: number;
-  selectedColumnIndex: number;
-  selectedRowIndex: number;
+  selected?: CommandBinding<any>;
 }) {
-  let rowIndex = 0;
   return (
     <>
       {items.map(([group, items]) => (
@@ -136,10 +121,7 @@ function Column({
           {items.map((item) => (
             <CommandButton
               key={item.item.key}
-              selected={
-                selectedRowIndex === rowIndex++ &&
-                columnIndex === selectedColumnIndex
-              }
+              selected={item.item.command === selected}
               commandBinding={item.item.command}
             />
           ))}

@@ -55,7 +55,6 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
             [command.key + '.' + key]: commandObject
         }));
         return () => {
-            console.log("Unregistering command: ", command.key + '.' + key);
             // Unregister the command when the component unmounts
             removeBinding(command, key);
             setCommandContext.current((prev: CommandRegistry) => {

@@ -96,7 +96,12 @@ export function useCommandSearch(
       } else if (event.key === "ArrowRight") {
         setColumn((prev) => Math.min(prev + 1, numColumns - 1));
       } else if (event.key === "Enter") {
-        selected?.run();
+        if (selected) {
+          onCommandSelect(selected);
+          setColumn(0);
+          setRow(0);
+          selected?.run();
+        }
       } else {
         // Refocus the input field so that the user can type again.
         if (inputRef.current) {
@@ -126,18 +131,18 @@ function findSelectedCommand(
   
   for (const [group_name, group] of featuredCommands){
     for (const item of group){
-      currentRowIndex++;
       if (currentRowIndex === rowIndex) {
         return item.item.command;
       }
+      currentRowIndex++;
     }
   }
   for (const [group_name, group] of groupedCommands[columnIndex]) {
     for (const item of group) {
-      currentRowIndex++;
       if (currentRowIndex === rowIndex) {
         return item.item.command;
       }
+      currentRowIndex++;
     }
   }
 }

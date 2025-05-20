@@ -3,7 +3,7 @@ import { CommandProvider, useCommands, useCommand, useRegisterCommand, useRunCom
 import { defineCommand } from "./commandBinding";
 import { groupCommands, extractGroup, extractType } from "./commandFiltering";
 import { useCommandSearch } from "./commandSearch";
-import type { GroupedResult, SearchResult } from "./commandSearch";
+import type { GroupedResult, SearchResult, useScrollOnSelected } from "./commandSearch";
 import type { Shortcut } from "./shortcuts";
 import { createInputSystem} from "./inputRequests"
 import type { InputRequestCallback } from "./inputRequests";
@@ -26,5 +26,6 @@ export {
     InputRequestCallback,
     useRunCommand,
     getArgKey, getCommandKey,
-    GroupedResult, SearchResult
+    GroupedResult, SearchResult,
+    useScrollOnSelected
 };

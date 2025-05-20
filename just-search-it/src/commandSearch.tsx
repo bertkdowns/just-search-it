@@ -102,6 +102,9 @@ export function useCommandSearch(
           setRow(0);
           selected?.run();
         }
+      } else if (event.key === "Escape") {
+        setColumn(0);
+        setRow(0);
       } else {
         // Refocus the input field so that the user can type again.
         if (inputRef.current) {
@@ -145,4 +148,18 @@ function findSelectedCommand(
       currentRowIndex++;
     }
   }
+}
+
+
+// This is used to scroll the selected command into view, and can be used
+// in buttons from the search results. if this command becomes selected,
+// it will scroll into view automatically.
+export function useScrollOnSelected(selected?: boolean) {
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+    React.useEffect(() => {
+        if (selected && scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+    }, [selected]);
+    return scrollRef;
 }

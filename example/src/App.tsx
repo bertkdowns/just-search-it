@@ -7,6 +7,7 @@ import RegisterGroup from './components/RegisterGroup'
 import CommandPallette from './commandPallette/CommandPallette'
 import InputDialog from './inputHandler/InputHandler'
 import RegisterModeChange from './components/RegisterModeChange'
+import { TestStateUpdates } from './components/TestStateUpdates'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <RegisterGroup group="group2" />
         <RegisterGroup group="group3" />
         <RegisterGroup group="group4" />
+        <TestStateUpdates />
         <div className="card bg-blue-300">
           <p>
             Edit <code>src/App.tsx</code> and save to test HMR

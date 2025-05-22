@@ -44,6 +44,14 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
     
     const commandKey =  command.key + '.' + key;
 
+    // Update the command function so that we can always access the latest version
+    setCommandContext.current((prev: CommandRegistry) => {
+        if (prev[commandKey]) {
+            prev[commandKey].run = fn;
+        }
+        return prev;
+    });
+
     useEffect(()=>{
         if (!setCommandContext) {
             console.error("Command context is not available. Make sure that you have wrapped this component in a CommandProvider.");

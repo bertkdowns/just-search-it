@@ -44,7 +44,10 @@ export function useRegisterCommand<Args extends any[], ReturnType>(command: Comm
     
     const commandKey =  command.key + '.' + key;
 
-    // Update the command function so that we can always access the latest version
+    // Update the command function so that we can always access the latest version.
+    // This setState in render is pretty sus. However, because it returns the previous state, in theory it won't trigger a rerender, as
+    // the state is the same.
+    // But it will update stuff inside the state.
     setCommandContext.current((prev: CommandRegistry) => {
         if (prev[commandKey]) {
             prev[commandKey].run = fn;

@@ -57,7 +57,6 @@ export function addBinding<Args extends any[], ReturnType>(command: CommandBindp
     // Store the function in the argBindings object
     if (command.argBindings[key]) {
         const binding = command.argBindings[key];
-        console.log("updating binding", binding);
         command.argBindings[key].run = fn;
         // In theory, the metadata should be the same, and shouldn't be updated.
         // So, we'll throw a warning if it is different.
@@ -65,7 +64,6 @@ export function addBinding<Args extends any[], ReturnType>(command: CommandBindp
             console.warn(`Command ${command.key} already has a binding for ${key}. The previous command doesn't appear to have been un-registered. This is a bug.`);
         }
     } else {
-        console.log("adding binding", metadata);
         command.argBindings[key] = { metadata: metadata, run: fn };
     }
     return key;

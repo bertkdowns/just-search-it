@@ -55,6 +55,14 @@ export function addBinding<Args extends any[], ReturnType>(command: CommandBindp
     // Use the arguments to create a unique key
     const key = args.map(arg => arg.toString()).join('.');
     // Store the function in the argBindings object
+    command.argBindings[key] = { metadata: metadata, run: fn };
+    return key;
+}
+export function updateBinding<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, metadata: CommandMetadata, fn: () => ReturnType, ...args: Args): string {
+    
+    // Use the arguments to create a unique key
+    const key = args.map(arg => arg.toString()).join('.');
+    // Store the function in the argBindings object
     if (command.argBindings[key]) {
         const binding = command.argBindings[key];
         command.argBindings[key].run = fn;
@@ -64,7 +72,7 @@ export function addBinding<Args extends any[], ReturnType>(command: CommandBindp
             console.warn(`Command ${command.key} already has a binding for ${key}. The previous command doesn't appear to have been un-registered. This is a bug.`);
         }
     } else {
-        command.argBindings[key] = { metadata: metadata, run: fn };
+        // Command doesn't exist, so don't do anything. When the command is added, the function will be added.
     }
     return key;
 }

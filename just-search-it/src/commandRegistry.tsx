@@ -3,7 +3,7 @@
 // This code is react-specific, but maybe it could be made generic?
 import { useContext, useEffect, createContext, useState, useRef } from "react";
 import type { CommandBinding, CommandBindpoint, CommandMetadata } from "./commandBinding";
-import {  addBinding,removeBinding, getArgKey, getCommandKey } from "./commandBinding";
+import {  updateBinding,removeBinding, getArgKey, getCommandKey, addBinding } from "./commandBinding";
 import React from "react";
 import { hasShortcut } from "./shortcuts";
 
@@ -39,32 +39,21 @@ export function useSetCommands() {
 
 export function useRegisterCommand<Args extends any[], ReturnType>(command: CommandBindpoint<Args, ReturnType>, metadata: CommandMetadata, fn: () => ReturnType, ...args: Args){
     const setCommandContext = useSetCommands();
-    const key = addBinding(command, metadata, fn, ...args);
-    const commandObject = command.argBindings[key]
-    
+    const key = updateBinding(command, metadata, fn, ...args);
     const commandKey =  command.key + '.' + key;
-
-    // Update the command function so that we can always access the latest version.
-    // This setState in render is pretty sus. However, because it returns the previous state, in theory it won't trigger a rerender, as
-    // the state is the same.
-    // But it will update stuff inside the state.
-    setCommandContext.current((prev: CommandRegistry) => {
-        if (prev[commandKey]) {
-            prev[commandKey].run = fn;
-        }
-        return prev;
-    });
-
+ 
     useEffect(()=>{
         if (!setCommandContext) {
             console.error("Command context is not available. Make sure that you have wrapped this component in a CommandProvider.");
             return;
         }
         // Register the command in the context
-        setCommandContext.current((prev: CommandRegistry) => ({
+        setCommandContext.current((prev: CommandRegistry) => {
+            const bindingKey = addBinding(command, metadata, fn, ...args);
+            return({
             ...prev,
-            [command.key + '.' + key]: commandObject
-        }));
+            [command.key + '.' + bindingKey]: command.argBindings[bindingKey]
+        })})
         return () => {
             // Unregister the command when the component unmounts
             removeBinding(command, key);
